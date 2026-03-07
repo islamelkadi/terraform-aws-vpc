@@ -17,6 +17,24 @@ Production-ready AWS VPC Endpoints module for private connectivity to AWS servic
 - **Cost Optimization**: Selective endpoint enablement
 - **Consistent Naming**: Integration with metadata module for standardized resource naming
 
+
+
+## Security
+
+### Environment-Based Security Controls
+
+Security controls are automatically applied based on the environment through the [terraform-aws-metadata](https://github.com/islamelkadi/terraform-aws-metadata?tab=readme-ov-file#security-profiles) module's security profiles:
+
+| Control | Dev | Staging | Prod |
+|---------|-----|---------|------|
+| VPC Endpoints | Optional | Recommended | Required |
+| Private DNS | Enabled | Enabled | Enabled |
+| Security group restrictions | Enforced | Enforced | Enforced |
+
+For full details on security profiles and how controls vary by environment, see the <a href="https://github.com/islamelkadi/terraform-aws-metadata?tab=readme-ov-file#security-profiles" target="_blank">Security Profiles</a> documentation.
+## Security
+
+#
 ## Usage Example
 
 ```hcl
@@ -51,17 +69,6 @@ module "vpc_endpoints" {
 }
 ```
 
-## Environment-Based Security Controls
-
-Security controls are automatically applied based on the environment through the [terraform-aws-metadata](https://github.com/islamelkadi/terraform-aws-metadata?tab=readme-ov-file#security-profiles){:target="_blank"} module's security profiles:
-
-| Control | Dev | Staging | Prod |
-|---------|-----|---------|------|
-| VPC Endpoints | Optional | Recommended | Required |
-| Private DNS | Enabled | Enabled | Enabled |
-| Security group restrictions | Enforced | Enforced | Enforced |
-
-For full details on security profiles and how controls vary by environment, see the <a href="https://github.com/islamelkadi/terraform-aws-metadata?tab=readme-ov-file#security-profiles" target="_blank">Security Profiles</a> documentation.
 
 <!-- BEGIN_TF_DOCS -->
 
@@ -191,10 +198,4 @@ module "vpc_endpoints" {
 ## Example
 
 See [example/](example/) for a complete working example with all features.
-
-## License
-
-MIT Licensed. See [LICENSE](LICENSE) for full details.
-<!-- END_TF_DOCS -->
-
 

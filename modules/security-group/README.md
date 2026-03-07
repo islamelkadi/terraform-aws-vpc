@@ -17,6 +17,24 @@ Production-ready AWS Security Group module for instance-level network filtering.
 - **Rule Descriptions**: Required descriptions for audit and documentation
 - **Consistent Naming**: Integration with metadata module for standardized resource naming
 
+
+
+## Security
+
+### Environment-Based Security Controls
+
+Security controls are automatically applied based on the environment through the [terraform-aws-metadata](https://github.com/islamelkadi/terraform-aws-metadata?tab=readme-ov-file#security-profiles) module's security profiles:
+
+| Control | Dev | Staging | Prod |
+|---------|-----|---------|------|
+| Block public ingress (0.0.0.0/0) | Enforced | Enforced | Enforced |
+| Rule descriptions | Recommended | Required | Required |
+| Restrictive egress | Recommended | Required | Required |
+
+For full details on security profiles and how controls vary by environment, see the <a href="https://github.com/islamelkadi/terraform-aws-metadata?tab=readme-ov-file#security-profiles" target="_blank">Security Profiles</a> documentation.
+## Security
+
+#
 ## Usage Example
 
 ```hcl
@@ -54,17 +72,6 @@ module "lambda_sg" {
 }
 ```
 
-## Environment-Based Security Controls
-
-Security controls are automatically applied based on the environment through the [terraform-aws-metadata](https://github.com/islamelkadi/terraform-aws-metadata?tab=readme-ov-file#security-profiles){:target="_blank"} module's security profiles:
-
-| Control | Dev | Staging | Prod |
-|---------|-----|---------|------|
-| Block public ingress (0.0.0.0/0) | Enforced | Enforced | Enforced |
-| Rule descriptions | Recommended | Required | Required |
-| Restrictive egress | Recommended | Required | Required |
-
-For full details on security profiles and how controls vary by environment, see the <a href="https://github.com/islamelkadi/terraform-aws-metadata?tab=readme-ov-file#security-profiles" target="_blank">Security Profiles</a> documentation.
 
 <!-- BEGIN_TF_DOCS -->
 
@@ -158,10 +165,4 @@ module "lambda_security_group" {
 ## Example
 
 See [example/](example/) for a complete working example with all features.
-
-## License
-
-MIT Licensed. See [LICENSE](LICENSE) for full details.
-<!-- END_TF_DOCS -->
-
 
