@@ -73,7 +73,7 @@ module "vpc_endpoints" {
 # Basic VPC Endpoints Example
 
 module "vpc_endpoints" {
-  source = "../"
+  source = "github.com/islamelkadi/terraform-aws-vpc//modules/endpoints"
 
   region             = var.region
   vpc_id             = var.vpc_id

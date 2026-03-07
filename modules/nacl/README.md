@@ -83,7 +83,7 @@ module "database_nacl" {
 # Basic Network ACL Example
 
 module "private_nacl" {
-  source = "../"
+  source = "github.com/islamelkadi/terraform-aws-vpc//modules/nacl"
 
   namespace   = var.namespace
   environment = var.environment

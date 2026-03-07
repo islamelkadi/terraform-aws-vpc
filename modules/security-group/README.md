@@ -76,7 +76,7 @@ module "lambda_sg" {
 # Basic Security Group Example
 
 module "lambda_security_group" {
-  source = "../"
+  source = "github.com/islamelkadi/terraform-aws-vpc//modules/security-group"
 
   namespace   = var.namespace
   environment = var.environment

@@ -221,7 +221,7 @@ module "vpc" {
 
 ```hcl
 module "vpc" {
-  source = "../"
+  source = "github.com/islamelkadi/terraform-aws-vpc//modules/vpc"
 
   namespace   = var.namespace
   environment = var.environment
