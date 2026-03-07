@@ -5,9 +5,13 @@ A comprehensive Terraform module for AWS networking infrastructure including VPC
 ## Table of Contents
 
 - [Prerequisites](#prerequisites)
-- [Submodules](#submodules)
-- [Security Controls](#security-controls)
+- [Security](#security)
+- [Features](#features)
+- [Usage](#usage)
 - [Requirements](#requirements)
+- [MCP Servers](#mcp-servers)
+- [License](#license)
+
 
 ## Prerequisites
 
@@ -24,6 +28,44 @@ make bootstrap
 
 This will install/upgrade: tfenv, Terraform (via tfenv), tflint, terraform-docs, checkov, and pre-commit.
 
+
+## Security
+
+### Security Controls
+
+This module implements security controls to comply with:
+- AWS Foundational Security Best Practices (FSBP)
+- CIS AWS Foundations Benchmark
+- NIST 800-53 Rev 5
+- NIST 800-171 Rev 2
+- PCI DSS v4.0
+
+### Implemented Controls
+
+- [x] **Flow Logs**: Enabled with CloudWatch for network traffic monitoring
+- [x] **Private Subnets**: For compute resources isolation
+- [x] **NAT Gateway**: High availability option for private subnet internet access
+- [x] **Security Groups**: Stateful firewall with least privilege rules
+- [x] **Network ACLs**: Optional stateless firewall for defense in depth
+- [x] **Security Control Overrides**: Extensible override system with audit justification
+- [ ] **VPC Endpoints**: For AWS services (optional, cost vs security tradeoff)
+
+For complete security standards and implementation details, see [AWS Security Standards](../../../.kiro/steering/aws/aws-security-standards.md).
+
+### Environment-Based Security Controls
+
+Security controls are automatically applied based on the environment through the [terraform-aws-metadata](https://github.com/islamelkadi/terraform-aws-metadata?tab=readme-ov-file#security-profiles){:target="_blank"} module's security profiles:
+
+| Control | Dev | Staging | Prod |
+|---------|-----|---------|------|
+| VPC Flow Logs | Optional | Required | Required |
+| Private subnets | Recommended | Required | Required |
+| NAT Gateway HA | Single AZ | Multi-AZ | Multi-AZ |
+| Security groups | Enforced | Enforced | Enforced |
+| Network ACLs | Optional | Recommended | Required |
+| VPC Endpoints | Optional | Recommended | Required |
+
+For full details on security profiles and how controls vary by environment, see the <a href="https://github.com/islamelkadi/terraform-aws-metadata?tab=readme-ov-file#security-profiles" target="_blank">Security Profiles</a> documentation.
 ## Submodules
 
 This module contains five submodules for complete VPC networking:
@@ -445,26 +487,6 @@ All submodules implement security best practices:
 
 **Best Practice:** Use Security Groups as primary control, add NACLs for additional layer when needed.
 
-## Security Controls
-
-This module implements security controls to comply with:
-- AWS Foundational Security Best Practices (FSBP)
-- CIS AWS Foundations Benchmark
-- NIST 800-53 Rev 5
-- NIST 800-171 Rev 2
-- PCI DSS v4.0
-
-### Implemented Controls
-
-- [x] **Flow Logs**: Enabled with CloudWatch for network traffic monitoring
-- [x] **Private Subnets**: For compute resources isolation
-- [x] **NAT Gateway**: High availability option for private subnet internet access
-- [x] **Security Groups**: Stateful firewall with least privilege rules
-- [x] **Network ACLs**: Optional stateless firewall for defense in depth
-- [x] **Security Control Overrides**: Extensible override system with audit justification
-- [ ] **VPC Endpoints**: For AWS services (optional, cost vs security tradeoff)
-
-For complete security standards and implementation details, see [AWS Security Standards](../../../.kiro/steering/aws/aws-security-standards.md).
 
 ## Examples
 
@@ -475,20 +497,6 @@ See each submodule's directory for specific examples:
 - [Endpoints Example](modules/endpoints/example/)
 - [NACL Example](modules/nacl/example/)
 
-## Environment-Based Security Controls
-
-Security controls are automatically applied based on the environment through the [terraform-aws-metadata](https://github.com/islamelkadi/terraform-aws-metadata?tab=readme-ov-file#security-profiles){:target="_blank"} module's security profiles:
-
-| Control | Dev | Staging | Prod |
-|---------|-----|---------|------|
-| VPC Flow Logs | Optional | Required | Required |
-| Private subnets | Recommended | Required | Required |
-| NAT Gateway HA | Single AZ | Multi-AZ | Multi-AZ |
-| Security groups | Enforced | Enforced | Enforced |
-| Network ACLs | Optional | Recommended | Required |
-| VPC Endpoints | Optional | Recommended | Required |
-
-For full details on security profiles and how controls vary by environment, see the <a href="https://github.com/islamelkadi/terraform-aws-metadata?tab=readme-ov-file#security-profiles" target="_blank">Security Profiles</a> documentation.
 
 ## MCP Servers
 
