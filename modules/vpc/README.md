@@ -4,13 +4,26 @@ Production-ready AWS VPC module with comprehensive security controls, multi-AZ h
 
 ## Table of Contents
 
-- [Security Controls](#security-controls)
+- [Security](#security)
 - [Features](#features)
 - [Usage Examples](#usage-examples)
 - [Requirements](#requirements)
 - [Examples](#examples)
 
-## Security Controls
+## Features
+
+- **Multi-AZ High Availability**: Automatic subnet distribution across availability zones
+- **Three-Tier Subnet Architecture**: Public, private, and database subnet tiers
+- **VPC Flow Logs**: Optional CloudWatch Logs integration for network monitoring
+- **NAT Gateway**: Optional NAT Gateway for private subnet internet access
+- **Flexible Configuration**: Support for single or multiple NAT Gateways
+- **DNS Support**: Configurable DNS hostnames and resolution
+- **Security by Default**: Flow logs and private subnets enabled by default
+- **Consistent Naming**: Integration with metadata module for standardized resource naming
+
+## Security
+
+### Security Controls
 
 This module implements security controls based on the metadata module's security policy. Controls can be selectively overridden with documented business justification.
 
@@ -43,17 +56,18 @@ security_control_overrides = {
 3. **Audit Trail**: All overrides require `justification` field for compliance
 4. **Review Cycle**: Quarterly review of all active overrides
 
-## Features
+### Environment-Based Security Controls
 
-- **Multi-AZ High Availability**: Automatic subnet distribution across availability zones
-- **Three-Tier Subnet Architecture**: Public, private, and database subnet tiers
-- **VPC Flow Logs**: Optional CloudWatch Logs integration for network monitoring
-- **NAT Gateway**: Optional NAT Gateway for private subnet internet access
-- **Flexible Configuration**: Support for single or multiple NAT Gateways
-- **DNS Support**: Configurable DNS hostnames and resolution
-- **Security by Default**: Flow logs and private subnets enabled by default
-- **Consistent Naming**: Integration with metadata module for standardized resource naming
+Security controls are automatically applied based on the environment through the [terraform-aws-metadata](https://github.com/islamelkadi/terraform-aws-metadata?tab=readme-ov-file#security-profiles) module's security profiles:
 
+| Control | Dev | Staging | Prod |
+|---------|-----|---------|------|
+| VPC Flow Logs | Optional | Required | Required |
+| Private subnets | Recommended | Required | Required |
+| NAT Gateway HA | Single AZ | Multi-AZ | Multi-AZ |
+| Security groups | Enforced | Enforced | Enforced |
+
+For full details on security profiles and how controls vary by environment, see the [Security Profiles](https://github.com/islamelkadi/terraform-aws-metadata?tab=readme-ov-file#security-profiles) documentation.
 ## Usage Examples
 
 ### Example 1: Basic VPC with Security Controls
@@ -201,21 +215,7 @@ module "vpc" {
 }
 ```
 
-## Environment-Based Security Controls
-
-Security controls are automatically applied based on the environment through the [terraform-aws-metadata](https://github.com/islamelkadi/terraform-aws-metadata?tab=readme-ov-file#security-profiles){:target="_blank"} module's security profiles:
-
-| Control | Dev | Staging | Prod |
-|---------|-----|---------|------|
-| VPC Flow Logs | Optional | Required | Required |
-| Private subnets | Recommended | Required | Required |
-| NAT Gateway HA | Single AZ | Multi-AZ | Multi-AZ |
-| Security groups | Enforced | Enforced | Enforced |
-
-For full details on security profiles and how controls vary by environment, see the <a href="https://github.com/islamelkadi/terraform-aws-metadata?tab=readme-ov-file#security-profiles" target="_blank">Security Profiles</a> documentation.
-
 <!-- BEGIN_TF_DOCS -->
-
 
 ## Usage
 
@@ -346,15 +346,6 @@ module "vpc" {
 | <a name="output_vpc_arn"></a> [vpc\_arn](#output\_vpc\_arn) | The ARN of the VPC |
 | <a name="output_vpc_cidr_block"></a> [vpc\_cidr\_block](#output\_vpc\_cidr\_block) | The CIDR block of the VPC |
 | <a name="output_vpc_id"></a> [vpc\_id](#output\_vpc\_id) | The ID of the VPC |
-
-## Example
-
-See [example/](example/) for a complete working example with all features.
-
-## License
-
-MIT Licensed. See [LICENSE](LICENSE) for full details.
-<!-- END_TF_DOCS -->
 
 ## Examples
 

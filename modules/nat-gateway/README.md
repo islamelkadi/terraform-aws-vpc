@@ -4,13 +4,25 @@ Production-ready AWS NAT Gateway module with Internet Gateway integration, Elast
 
 ## Table of Contents
 
-- [Security Controls](#security-controls)
+- [Security](#security)
 - [Features](#features)
 - [Usage Examples](#usage-examples)
 - [Requirements](#requirements)
 - [Examples](#examples)
 
-## Security Controls
+## Features
+
+- **High Availability**: Support for multiple NAT Gateways across availability zones
+- **Elastic IP Management**: Automatic Elastic IP allocation and association
+- **Internet Gateway Integration**: Optional Internet Gateway creation or use existing
+- **Flexible Deployment**: Single or multi-AZ NAT Gateway configurations
+- **Public/Private Connectivity**: Support for both public and private NAT Gateways
+- **Consistent Naming**: Integration with metadata module for standardized resource naming
+- **Cost Optimization**: Configurable single NAT Gateway for development environments
+
+## Security
+
+### Security Controls
 
 This module implements security controls based on the metadata module's security policy. Controls can be selectively overridden with documented business justification.
 
@@ -41,16 +53,17 @@ security_control_overrides = {
 3. **Cost Optimization**: Use single NAT Gateway in dev, multiple in prod
 4. **Audit Trail**: All overrides require `justification` field for compliance
 
-## Features
+### Environment-Based Security Controls
 
-- **High Availability**: Support for multiple NAT Gateways across availability zones
-- **Elastic IP Management**: Automatic Elastic IP allocation and association
-- **Internet Gateway Integration**: Optional Internet Gateway creation or use existing
-- **Flexible Deployment**: Single or multi-AZ NAT Gateway configurations
-- **Public/Private Connectivity**: Support for both public and private NAT Gateways
-- **Consistent Naming**: Integration with metadata module for standardized resource naming
-- **Cost Optimization**: Configurable single NAT Gateway for development environments
+Security controls are automatically applied based on the environment through the [terraform-aws-metadata](https://github.com/islamelkadi/terraform-aws-metadata?tab=readme-ov-file#security-profiles) module's security profiles:
 
+| Control | Dev | Staging | Prod |
+|---------|-----|---------|------|
+| NAT Gateway HA | Single AZ | Multi-AZ | Multi-AZ |
+| Internet Gateway | Required | Required | Required |
+| Elastic IP management | Automatic | Automatic | Automatic |
+
+For full details on security profiles and how controls vary by environment, see the [Security Profiles](https://github.com/islamelkadi/terraform-aws-metadata?tab=readme-ov-file#security-profiles) documentation.
 ## Usage Examples
 
 ### Example 1: Basic NAT Gateway with Security Controls
@@ -176,20 +189,7 @@ module "nat_gateway" {
 }
 ```
 
-## Environment-Based Security Controls
-
-Security controls are automatically applied based on the environment through the [terraform-aws-metadata](https://github.com/islamelkadi/terraform-aws-metadata?tab=readme-ov-file#security-profiles){:target="_blank"} module's security profiles:
-
-| Control | Dev | Staging | Prod |
-|---------|-----|---------|------|
-| NAT Gateway HA | Single AZ | Multi-AZ | Multi-AZ |
-| Internet Gateway | Required | Required | Required |
-| Elastic IP management | Automatic | Automatic | Automatic |
-
-For full details on security profiles and how controls vary by environment, see the <a href="https://github.com/islamelkadi/terraform-aws-metadata?tab=readme-ov-file#security-profiles" target="_blank">Security Profiles</a> documentation.
-
 <!-- BEGIN_TF_DOCS -->
-
 
 ## Usage
 
@@ -307,15 +307,6 @@ resource "aws_route" "private_nat_gateway" {
 | <a name="output_nat_gateway_private_ips"></a> [nat\_gateway\_private\_ips](#output\_nat\_gateway\_private\_ips) | List of private IPs associated with NAT Gateways |
 | <a name="output_nat_gateway_public_ips"></a> [nat\_gateway\_public\_ips](#output\_nat\_gateway\_public\_ips) | List of public Elastic IPs associated with NAT Gateways |
 | <a name="output_tags"></a> [tags](#output\_tags) | Tags applied to NAT Gateway resources |
-
-## Example
-
-See [example/](example/) for a complete working example with all features.
-
-## License
-
-MIT Licensed. See [LICENSE](LICENSE) for full details.
-<!-- END_TF_DOCS -->
 
 ## Examples
 
