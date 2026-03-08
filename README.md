@@ -1,5 +1,9 @@
 # Terraform AWS VPC Module
 
+[![Terraform Security](https://github.com/islamelkadi/terraform-aws-vpc/actions/workflows/terraform-security.yaml/badge.svg)](https://github.com/islamelkadi/terraform-aws-vpc/actions/workflows/terraform-security.yaml)
+[![Terraform Lint & Validation](https://github.com/islamelkadi/terraform-aws-vpc/actions/workflows/terraform-lint.yaml/badge.svg)](https://github.com/islamelkadi/terraform-aws-vpc/actions/workflows/terraform-lint.yaml)
+[![Terraform Docs](https://github.com/islamelkadi/terraform-aws-vpc/actions/workflows/terraform-docs.yaml/badge.svg)](https://github.com/islamelkadi/terraform-aws-vpc/actions/workflows/terraform-docs.yaml)
+
 A comprehensive Terraform module for AWS networking infrastructure including VPC, VPC Endpoints, Network ACLs, and Security Groups.
 
 ## Table of Contents
