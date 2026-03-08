@@ -3,10 +3,10 @@
 module "vpc_endpoints" {
   source = "../"
 
-  namespace   = var.namespace
-  environment = var.environment
-  name        = var.name
-  region      = var.region
+  namespace          = var.namespace
+  environment        = var.environment
+  name               = var.name
+  region             = var.region
   vpc_id             = var.vpc_id
   private_subnet_ids = var.private_subnet_ids
   route_table_ids    = var.route_table_ids

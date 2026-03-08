@@ -238,10 +238,10 @@ resource "aws_route_table_association" "database" {
 # CloudWatch Log Group for VPC Flow Logs
 resource "aws_cloudwatch_log_group" "flow_logs" {
   count = var.enable_flow_logs ? 1 : 0
-  
+
   name              = "/aws/vpc/${var.name}-flow-logs"
   retention_in_days = var.flow_logs_retention_days
-  
+
   tags = merge(
     var.tags,
     {
