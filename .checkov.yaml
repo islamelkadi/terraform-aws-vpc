@@ -1,6 +1,10 @@
 # Checkov configuration for terraform-aws-vpc
 # Suppressions for checks that are not applicable to example/demo code
 
+# Skip scanning external modules directory
+skip-path:
+  - .external_modules/**
+
 skip-check:
   # Security Group Egress - Intentional for VPC endpoints
   - id: CKV_AWS_382
