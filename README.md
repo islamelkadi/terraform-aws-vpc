@@ -63,6 +63,23 @@ Security controls are automatically applied based on the environment through the
 | VPC Endpoints | Optional | Recommended | Required |
 
 For full details on security profiles and how controls vary by environment, see the [Security Profiles](https://github.com/islamelkadi/terraform-aws-metadata?tab=readme-ov-file#security-profiles) documentation.
+
+### Security Scan Suppressions
+
+This module suppresses certain Checkov security checks that are either not applicable to example/demo code or represent intentional design choices. The following checks are suppressed in `.checkov.yaml`:
+
+**Module Source Versioning (CKV_TF_1, CKV_TF_2)**
+- Suppressed because we use semantic version tags (`?ref=v1.0.0`) instead of commit hashes for better maintainability and readability
+- Semantic versioning is a valid and widely-accepted versioning strategy for stable releases
+
+**VPC Security Controls**
+- **Security Group Egress (CKV_AWS_382)**: VPC endpoint security groups need broad egress for AWS service access; users should restrict based on specific services used
+- **NACL All Ports (CKV_AWS_352)**: NACL default deny rule intentionally blocks all ports; this is a security best practice
+- **CloudWatch Log Group KMS Encryption (CKV_AWS_158)**: KMS encryption for VPC Flow Logs adds cost; enable based on security requirements
+- **Security Group Attachment (CKV2_AWS_5)**: Security groups in example code may not be immediately attached; users will attach them to their resources
+- **Default Security Group (CKV2_AWS_12)**: Default security group restrictions should be managed by users after VPC creation based on their requirements
+- **NACL Attachment (CKV2_AWS_1)**: NACL attachment to subnets is demonstrated separately; users should attach based on their network segmentation requirements
+
 ## Submodules
 
 This module contains five submodules for complete VPC networking:
