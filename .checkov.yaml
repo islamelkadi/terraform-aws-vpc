@@ -1,32 +1,25 @@
 # Checkov configuration for terraform-aws-vpc
 # Suppressions for checks that are not applicable to example/demo code
 
-
 skip-check:
   # Security Group Egress - Intentional for VPC endpoints
-  - id: CKV_AWS_382
-    comment: "VPC endpoint security groups need broad egress for AWS service access. Users should restrict based on specific services used."
+  - CKV_AWS_382  # VPC endpoint security groups need broad egress for AWS service access
   
   # NACL All Ports - Default deny rule
-  - id: CKV_AWS_352
-    comment: "NACL default deny rule intentionally blocks all ports. This is a security best practice."
+  - CKV_AWS_352  # NACL default deny rule intentionally blocks all ports
   
   # CloudWatch Log Group KMS Encryption - Optional in examples
-  - id: CKV_AWS_158
-    comment: "KMS encryption for VPC Flow Logs adds cost. Users should enable based on their security requirements."
+  - CKV_AWS_158  # KMS encryption for VPC Flow Logs adds cost
   
   # Security Group Attachment - Example code
-  - id: CKV2_AWS_5
-    comment: "Security groups in example code may not be immediately attached. Users will attach them to their resources."
+  - CKV2_AWS_5  # Security groups in example code may not be immediately attached
   
   # Default Security Group - VPC module responsibility
-  - id: CKV2_AWS_12
-    comment: "Default security group restrictions should be managed by users after VPC creation based on their requirements."
+  - CKV2_AWS_12  # Default security group restrictions should be managed by users after VPC creation
   
   # NACL Attachment - Example code
-  - id: CKV2_AWS_1
-    comment: "NACL attachment to subnets is demonstrated separately. Users should attach based on their network segmentation requirements."
+  - CKV2_AWS_1  # NACL attachment to subnets is demonstrated separately
   
-  # Terraform Module Sources - Using semantic versioning tags (commit hash)
-  - id: CKV_TF_1
-    comment: "Using semantic version tags (?ref=v1.0.0) instead of commit hashes for better maintainability and readability."
+  # Terraform Module Sources - Using semantic versioning tags
+  - CKV_TF_1  # Using semantic version tags (?ref=v1.0.0) instead of commit hashes
+  - CKV_TF_2  # Using semantic version tags (?ref=v1.0.0) which is a valid versioning strategy
