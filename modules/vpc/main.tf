@@ -236,19 +236,18 @@ resource "aws_route_table_association" "database" {
 }
 
 # CloudWatch Log Group for VPC Flow Logs
-module "flow_logs_log_group" {
-  count  = var.enable_flow_logs ? 1 : 0
-  source = "../../../terraform-aws-cloudwatch/modules/logs"
+resource "aws_cloudwatch_log_group" "flow_logs" {
+  count = var.enable_flow_logs ? 1 : 0
 
-  namespace   = "vpc"
-  environment = try(var.tags["Environment"], "prod")
-  name        = "${var.name}-flow-logs"
-  region      = var.region
+  name              = "/aws/vpc/${var.name}-flow-logs"
+  retention_in_days = var.flow_logs_retention_days
 
-  log_group_name_override = "/aws/vpc/${var.name}-flow-logs"
-  retention_in_days       = var.flow_logs_retention_days
-
-  tags = var.tags
+  tags = merge(
+    var.tags,
+    {
+      Name = "/aws/vpc/${var.name}-flow-logs"
+    }
+  )
 }
 
 # IAM Role for VPC Flow Logs
@@ -280,8 +279,8 @@ data "aws_iam_policy_document" "flow_logs_policy" {
       "logs:DescribeLogStreams"
     ]
     resources = [
-      module.flow_logs_log_group[0].log_group_arn,
-      "${module.flow_logs_log_group[0].log_group_arn}:*"
+      aws_cloudwatch_log_group.flow_logs[0].arn,
+      "${aws_cloudwatch_log_group.flow_logs[0].arn}:*"
     ]
   }
 }
@@ -314,7 +313,7 @@ resource "aws_flow_log" "this" {
   count = var.enable_flow_logs ? 1 : 0
 
   iam_role_arn    = aws_iam_role.flow_logs[0].arn
-  log_destination = module.flow_logs_log_group[0].log_group_arn
+  log_destination = aws_cloudwatch_log_group.flow_logs[0].arn
   traffic_type    = "ALL"
   vpc_id          = aws_vpc.this.id
 

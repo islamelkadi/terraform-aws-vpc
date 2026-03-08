@@ -217,11 +217,12 @@ module "vpc" {
 
 <!-- BEGIN_TF_DOCS -->
 
+
 ## Usage
 
 ```hcl
 module "vpc" {
-  source = "github.com/islamelkadi/terraform-aws-vpc//modules/vpc"
+  source = "../"
 
   namespace   = var.namespace
   environment = var.environment
@@ -231,7 +232,7 @@ module "vpc" {
   cidr_block = var.cidr_block
   az_count   = var.az_count
 
-  # Subnet CIDRs will be auto-generated:
+  # Subnet CIDRs will be auto-generated based on CIDR block and AZ count:
   # Public: 10.0.0.0/24, 10.0.1.0/24
   # Private: 10.0.10.0/24, 10.0.11.0/24
   # Database: 10.0.20.0/24, 10.0.21.0/24
@@ -263,13 +264,13 @@ module "vpc" {
 
 | Name | Source | Version |
 |------|--------|---------|
-| <a name="module_flow_logs_log_group"></a> [flow\_logs\_log\_group](#module\_flow\_logs\_log\_group) | ../../../terraform-aws-cloudwatch/modules/logs | n/a |
-| <a name="module_metadata"></a> [metadata](#module\_metadata) | github.com/islamelkadi/terraform-aws-metadata | v1.1.0 |
+| <a name="module_metadata"></a> [metadata](#module\_metadata) | github.com/islamelkadi/terraform-aws-metadata | n/a |
 
 ## Resources
 
 | Name | Type |
 |------|------|
+| [aws_cloudwatch_log_group.flow_logs](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/cloudwatch_log_group) | resource |
 | [aws_db_subnet_group.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/db_subnet_group) | resource |
 | [aws_eip.nat](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/eip) | resource |
 | [aws_flow_log.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/flow_log) | resource |
@@ -307,12 +308,13 @@ module "vpc" {
 | <a name="input_enable_nat_gateway"></a> [enable\_nat\_gateway](#input\_enable\_nat\_gateway) | Enable NAT Gateway for private subnets | `bool` | `true` | no |
 | <a name="input_environment"></a> [environment](#input\_environment) | Environment name (dev, staging, prod) | `string` | n/a | yes |
 | <a name="input_flow_logs_retention_days"></a> [flow\_logs\_retention\_days](#input\_flow\_logs\_retention\_days) | Number of days to retain VPC Flow Logs | `number` | `30` | no |
+| <a name="input_kms_key_arn"></a> [kms\_key\_arn](#input\_kms\_key\_arn) | ARN of KMS key for encrypting VPC Flow Logs CloudWatch Log Group. Required for compliance in staging/prod environments. | `string` | `null` | no |
 | <a name="input_name"></a> [name](#input\_name) | Name to be used on all resources as prefix | `string` | n/a | yes |
 | <a name="input_namespace"></a> [namespace](#input\_namespace) | Namespace (organization/team name) | `string` | n/a | yes |
 | <a name="input_private_subnet_cidrs"></a> [private\_subnet\_cidrs](#input\_private\_subnet\_cidrs) | CIDR blocks for private subnets | `list(string)` | `[]` | no |
 | <a name="input_public_subnet_cidrs"></a> [public\_subnet\_cidrs](#input\_public\_subnet\_cidrs) | CIDR blocks for public subnets | `list(string)` | `[]` | no |
 | <a name="input_region"></a> [region](#input\_region) | AWS region where resources will be created | `string` | n/a | yes |
-| <a name="input_security_control_overrides"></a> [security\_control\_overrides](#input\_security\_control\_overrides) | Override specific security controls with documented justification | <pre>object({<br/>    disable_flow_logs_requirement       = optional(bool, false)<br/>    disable_private_subnets_requirement = optional(bool, false)<br/>    disable_nat_gateway_requirement     = optional(bool, false)<br/>    justification                       = optional(string, "")<br/>  })</pre> | <pre>{<br/>  "disable_flow_logs_requirement": false,<br/>  "disable_nat_gateway_requirement": false,<br/>  "disable_private_subnets_requirement": false,<br/>  "justification": ""<br/>}</pre> | no |
+| <a name="input_security_control_overrides"></a> [security\_control\_overrides](#input\_security\_control\_overrides) | Override specific security controls with documented justification | <pre>object({<br/>    disable_flow_logs_requirement       = optional(bool, false)<br/>    disable_private_subnets_requirement = optional(bool, false)<br/>    disable_nat_gateway_requirement     = optional(bool, false)<br/>    disable_kms_requirement             = optional(bool, false)<br/>    justification                       = optional(string, "")<br/>  })</pre> | <pre>{<br/>  "disable_flow_logs_requirement": false,<br/>  "disable_kms_requirement": false,<br/>  "disable_nat_gateway_requirement": false,<br/>  "disable_private_subnets_requirement": false,<br/>  "justification": ""<br/>}</pre> | no |
 | <a name="input_security_controls"></a> [security\_controls](#input\_security\_controls) | Security controls configuration from metadata module | <pre>object({<br/>    encryption = object({<br/>      require_kms_customer_managed  = bool<br/>      require_encryption_at_rest    = bool<br/>      require_encryption_in_transit = bool<br/>      enable_kms_key_rotation       = bool<br/>    })<br/>    logging = object({<br/>      require_cloudwatch_logs = bool<br/>      min_log_retention_days  = number<br/>      require_access_logging  = bool<br/>      require_flow_logs       = bool<br/>    })<br/>    monitoring = object({<br/>      enable_xray_tracing         = bool<br/>      enable_enhanced_monitoring  = bool<br/>      enable_performance_insights = bool<br/>      require_cloudtrail          = bool<br/>    })<br/>    network = object({<br/>      require_private_subnets = bool<br/>      require_vpc_endpoints   = bool<br/>      block_public_ingress    = bool<br/>      require_imdsv2          = bool<br/>    })<br/>    compliance = object({<br/>      enable_point_in_time_recovery = bool<br/>      require_reserved_concurrency  = bool<br/>      enable_deletion_protection    = bool<br/>    })<br/>    high_availability = object({<br/>      require_multi_az    = bool<br/>      require_nat_gateway = bool<br/>    })<br/>  })</pre> | `null` | no |
 | <a name="input_single_nat_gateway"></a> [single\_nat\_gateway](#input\_single\_nat\_gateway) | Use a single NAT Gateway for all private subnets (cost optimization) | `bool` | `false` | no |
 | <a name="input_tags"></a> [tags](#input\_tags) | Additional tags to apply to all resources | `map(string)` | `{}` | no |
@@ -347,7 +349,11 @@ module "vpc" {
 | <a name="output_vpc_cidr_block"></a> [vpc\_cidr\_block](#output\_vpc\_cidr\_block) | The CIDR block of the VPC |
 | <a name="output_vpc_id"></a> [vpc\_id](#output\_vpc\_id) | The ID of the VPC |
 
-## Examples
+## Example
 
-See [example/](example/) for a complete working example.
+See [example/](example/) for a complete working example with all features.
 
+## License
+
+MIT Licensed. See [LICENSE](LICENSE) for full details.
+<!-- END_TF_DOCS -->
