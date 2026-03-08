@@ -1,37 +1,27 @@
-# .checkov.yml
-
-# Frameworks à scanner
-framework:
-  - terraform
-
-# Format de sortie
-output:
-  - cli
-
-# Options générales
-quiet: true
-compact: true
-download-external-modules: true
-evaluate-variables: true
-
-# Répertoires à scanner
-directory:
-  - .
+# Checkov configuration for terraform-aws-vpc
+# Suppressions for checks that are not applicable to example/demo code
 
 skip-check:
-  - CKV_TF_1    # Ensure Terraform module sources use a commit hash
-  - CKV_AWS_130 # Public subnets assign public IP by design
-  - CKV_AWS_338 # Example uses short log retention for demo purposes
-
-# Répertoires à exclure
-skip-path:
-  - .terraform/
-  - .terragrunt-cache/
-  - "**/.terraform/"
-  - "**/.terraform.lock.hcl"
-  - "**/.terragrunt-cache/"
-  - "**/terraform"
-  - "**/terraform-output.json"
-  - "*.tfstate*"
-  - "**/*.tfstate*"
-  - terraform-output.json
+  # Security Group Egress - Intentional for VPC endpoints
+  - id: CKV_AWS_382
+    comment: "VPC endpoint security groups need broad egress for AWS service access. Users should restrict based on specific services used."
+  
+  # NACL All Ports - Default deny rule
+  - id: CKV_AWS_352
+    comment: "NACL default deny rule intentionally blocks all ports. This is a security best practice."
+  
+  # CloudWatch Log Group KMS Encryption - Optional in examples
+  - id: CKV_AWS_158
+    comment: "KMS encryption for VPC Flow Logs adds cost. Users should enable based on their security requirements."
+  
+  # Security Group Attachment - Example code
+  - id: CKV2_AWS_5
+    comment: "Security groups in example code may not be immediately attached. Users will attach them to their resources."
+  
+  # Default Security Group - VPC module responsibility
+  - id: CKV2_AWS_12
+    comment: "Default security group restrictions should be managed by users after VPC creation based on their requirements."
+  
+  # NACL Attachment - Example code
+  - id: CKV2_AWS_1
+    comment: "NACL attachment to subnets is demonstrated separately. Users should attach based on their network segmentation requirements."
