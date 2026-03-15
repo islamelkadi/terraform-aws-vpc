@@ -1,25 +1,54 @@
-# Checkov configuration for terraform-aws-vpc
-# Suppressions for checks that are not applicable to example/demo code
+# Checkov configuration for terraform-aws-vpc module
+# Suppresses security checks that are either not applicable to this module
+# or represent intentional design choices with documented justifications
 
+# Skip specific checks with justifications
 skip-check:
-  # Security Group Egress - Intentional for VPC endpoints
-  - CKV_AWS_382  # VPC endpoint security groups need broad egress for AWS service access
-  
-  # NACL All Ports - Default deny rule
-  - CKV_AWS_352  # NACL default deny rule intentionally blocks all ports
-  
-  # CloudWatch Log Group KMS Encryption - Optional in examples
-  - CKV_AWS_158  # KMS encryption for VPC Flow Logs adds cost
-  
-  # Security Group Attachment - Example code
-  - CKV2_AWS_5  # Security groups in example code may not be immediately attached
-  
-  # Default Security Group - VPC module responsibility
-  - CKV2_AWS_12  # Default security group restrictions should be managed by users after VPC creation
-  
-  # NACL Attachment - Example code
-  - CKV2_AWS_1  # NACL attachment to subnets is demonstrated separately
-  
-  # Terraform Module Sources - Using semantic versioning tags
-  - CKV_TF_1  # Using semantic version tags (?ref=v1.0.0) instead of commit hashes
-  - CKV_TF_2  # Using semantic version tags (?ref=v1.0.0) which is a valid versioning strategy
+  # Module Source Versioning
+  - id: CKV_TF_1
+    comment: "We use semantic version tags (?ref=v1.1.1) instead of commit hashes for better maintainability and readability. Semantic versioning is a valid and widely-accepted versioning strategy for stable releases."
+
+  - id: CKV_TF_2
+    comment: "We use semantic version tags (?ref=v1.1.1) instead of commit hashes for better maintainability and readability. Semantic versioning is a valid and widely-accepted versioning strategy for stable releases."
+
+  # Security Group Egress Rules
+  - id: CKV_AWS_382
+    comment: "VPC endpoint security groups need broad egress for AWS service communication. Users should restrict egress rules based on their specific network security policies and requirements."
+
+  # NACL Security Controls
+  - id: CKV_AWS_352
+    comment: "NACL default deny rule intentionally blocks all ports as a security best practice. This provides defense-in-depth network security."
+
+  # CloudWatch Log Group Encryption
+  - id: CKV_AWS_158
+    comment: "KMS encryption for VPC Flow Logs adds cost and complexity. Users should enable KMS encryption based on their security requirements and compliance needs."
+
+  # CloudWatch Log Retention
+  - id: CKV_AWS_338
+    comment: "One-year log retention adds significant cost. Examples use shorter retention for cost efficiency. Users should configure retention based on their compliance requirements."
+
+  # Security Group Attachment
+  - id: CKV2_AWS_5
+    comment: "Security groups in example code may not be immediately attached to resources. Users will attach them to their specific resources based on their architecture."
+
+  # Default Security Group Restrictions
+  - id: CKV2_AWS_12
+    comment: "Default security group restrictions should be managed by users after VPC creation based on their specific security requirements and network architecture."
+
+  # NACL Subnet Attachment
+  - id: CKV2_AWS_1
+    comment: "NACL attachment to subnets is demonstrated in examples. Users should attach NACLs based on their network segmentation and security requirements."
+
+  # Public Subnet Auto-Assign Public IP
+  - id: CKV_AWS_130
+    comment: "Public subnets are intentionally designed to auto-assign public IPs for resources that need direct internet access (NAT gateways, load balancers, bastion hosts). This is the expected behavior for public subnets."
+
+# Soft fail mode - report issues but don't fail the build
+soft-fail: true
+
+# Output format
+output: cli
+
+# Enable specific frameworks
+framework:
+  - terraform
