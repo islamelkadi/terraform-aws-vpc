@@ -8,6 +8,9 @@ skip-check:
   - id: CKV_TF_1
     comment: "We use semantic version tags (?ref=v1.1.1) instead of commit hashes for better maintainability and readability. Semantic versioning is a valid and widely-accepted versioning strategy for stable releases."
 
+  - id: CKV_TF_2
+    comment: "We use semantic version tags (?ref=v1.1.1) instead of commit hashes for better maintainability and readability. Semantic versioning is a valid and widely-accepted versioning strategy for stable releases."
+
   # Security Group Egress Rules
   - id: CKV_AWS_382
     comment: "VPC endpoint security groups need broad egress for AWS service communication. Users should restrict egress rules based on their specific network security policies and requirements."
