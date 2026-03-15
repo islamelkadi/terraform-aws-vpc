@@ -25,3 +25,13 @@ skip-check:
   # NACL Attachment - Example code
   - id: CKV2_AWS_1
     comment: "NACL attachment to subnets is demonstrated separately. Users should attach based on their network segmentation requirements."
+  - id: CKV_TF_1
+    comment: "Using semantic version tags (?ref=v1.0.0) instead of commit hashes for better maintainability and readability."
+  
+  # VPC Public Subnet - Intentional design
+  - id: CKV_AWS_130
+    comment: "Public subnets are designed to auto-assign public IPs for resources that need internet access. This is intentional."
+  
+  # CloudWatch Log Retention - Example code
+  - id: CKV_AWS_338
+    comment: "Log retention of 1 year adds cost. Examples use shorter retention for cost efficiency. Users should configure based on compliance requirements."
