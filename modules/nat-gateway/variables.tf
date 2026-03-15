@@ -121,10 +121,10 @@ variable "security_control_overrides" {
   description = "Security control overrides with justification for audit compliance"
   type = object({
     disable_high_availability = optional(bool, false)
-    justification            = optional(string, "")
+    justification             = optional(string, "")
   })
   default = {
     disable_high_availability = false
-    justification            = ""
+    justification             = ""
   }
 }
